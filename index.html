@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio Pro - Bebedouro Gelágua EGM30</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        .confetti {
+            position: absolute; width: 10px; height: 10px;
+            animation: confetti 3s ease-out forwards;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 relative overflow-x-hidden">
+
+    <nav class="absolute top-4 right-4 z-10">
+        <button onclick="toggleAdminModal()" class="text-xs font-semibold text-slate-400 hover:text-indigo-600 bg-white/80 border border-slate-200 px-4 py-2 rounded-full shadow-sm transition-all">
+            Painel Admin
+        </button>
+    </nav>
+
+    <header class="bg-indigo-600 text-white py-16 px-4 text-center shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+            <svg width="100%" height="100%"><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/></pattern><rect width="100%" height="100%" fill="url(#grid)" /></svg>
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-4 relative z-10">Grande Sorteio! 🎁</h1>
+        <p class="text-indigo-100 text-lg max-w-2xl mx-auto relative z-10">Participe e concorra ao prêmio da Igreja Batista Nova Aliança</p>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 -mt-12 pb-20 relative z-10">
+        
+        <!-- SEÇÃO DO PRODUTO -->
+        <section class="glass-card rounded-3xl p-8 shadow-2xl mb-10 border-b-4 border-indigo-500">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <!-- Espaço para Imagem -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-inner border border-slate-100 aspect-square flex items-center justify-center relative">
+                    <span class="absolute top-4 left-4 bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md z-20">SEMINOVO</span>
+                    <!-- Substitua o src abaixo pelo caminho da sua imagem na pasta image -->
+                    <img src="image/gelagua.jpg" alt="Bebedouro Gelágua EGM30" class="w-full h-full object-contain p-4" onerror="this.parentElement.innerHTML='<p class=\'text-slate-300 font-bold\'>[Foto do Bebedouro aqui]</p>'">
+                </div>
+
+                <!-- Detalhes do Produto -->
+                <div class="text-left">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-indigo-100 text-indigo-700 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider inline-block">Prêmio Especial</span>
+                        <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block">Igreja Batista Nova Aliança</span>
+                    </div>
+                    
+                    <h2 class="text-3xl font-black text-slate-800 mb-2">Bebedouro Gelágua EGM30</h2>
+                    <p class="text-orange-600 font-bold text-sm mb-4 uppercase tracking-tighter italic border-l-2 border-orange-500 pl-2">Equipamento seminovo em excelente estado</p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-indigo-500 mr-2">✦</span>
+                            <p class="text-slate-600"><strong class="text-slate-800">Sistema Easy Open:</strong> Abertura automática do lacre do garrafão.</p>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-indigo-500 mr-2">✦</span>
+                            <p class="text-slate-600"><strong class="text-slate-800">Função Mix:</strong> Mistura água gelada e natural com apenas um toque.</p>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-indigo-500 mr-2">✦</span>
+                            <p class="text-slate-600"><strong class="text-slate-800">Aparador Removível:</strong> Facilita a limpeza e manutenção diária.</p>
+                        </li>
+                    </ul>
+
+                    <div id="countdown" class="flex mt-8 space-x-6">
+                        <div class="text-center"><span id="days" class="text-2xl font-black text-indigo-600 block">00</span><span class="text-[9px] font-bold text-slate-400 uppercase">Dias</span></div>
+                        <div class="text-center"><span id="hours" class="text-2xl font-black text-indigo-600 block">00</span><span class="text-[9px] font-bold text-slate-400 uppercase">Horas</span></div>
+                        <div class="text-center"><span id="minutes" class="text-2xl font-black text-indigo-600 block">00</span><span class="text-[9px] font-bold text-slate-400 uppercase">Mins</span></div>
+                        <div class="text-center"><span id="seconds" class="text-2xl font-black text-indigo-600 block">00</span><span class="text-[9px] font-bold text-slate-400 uppercase">Segs</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <section class="lg:col-span-2 glass-card rounded-3xl p-8 shadow-xl">
+                <div class="flex items-center mb-8">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-2xl mr-4 shadow-inner">📝</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800">Participe Agora</h3>
+                        <p class="text-slate-400 text-sm">Inscreva-se para concorrer</p>
+                    </div>
+                </div>
+                
+                <form id="drawForm" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Nome Completo</label>
+                            <input type="text" id="userName" name="name" required class="w-full px-5 py-4 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all bg-slate-50/50" placeholder="Seu nome">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">WhatsApp / Telefone</label>
+                            <input type="tel" id="userPhone" name="phone" required class="w-full px-5 py-4 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all bg-slate-50/50" placeholder="(00) 00000-0000">
+                        </div>
+                    </div>
+                    <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 rounded-2xl shadow-lg shadow-indigo-200 transition-all active:scale-[0.98] flex items-center justify-center space-x-2">
+                        <span>CONFIRMAR MINHA VAGA</span>
+                    </button>
+                </form>
+                <div id="statusMsg" class="mt-6 hidden p-4 rounded-2xl text-center font-bold animate-pulse"></div>
+            </section>
+
+            <section class="glass-card rounded-3xl p-8 shadow-xl flex flex-col items-center justify-center text-center border-2 border-indigo-50">
+                <div class="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center text-4xl mb-4 text-indigo-600 shadow-inner">👥</div>
+                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-2">Inscritos</h4>
+                <div class="text-6xl font-black text-slate-800 mb-2" id="totalCount">0</div>
+                <button onclick="fetchParticipants()" class="mt-4 text-[10px] font-bold text-indigo-500 uppercase hover:underline">Atualizar 🔄</button>
+            </section>
+        </div>
+    </main>
+
+    <!-- MODAL ADMIN -->
+    <div id="adminModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="toggleAdminModal()"></div>
+        <div class="relative bg-white w-full max-w-3xl m-4 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">Painel Admin</h2>
+                <button onclick="toggleAdminModal()" class="text-slate-400 text-2xl">&times;</button>
+            </div>
+            
+            <div id="adminAuth" class="p-12 text-center">
+                <input type="password" id="adminPass" class="w-full max-w-xs border-2 border-slate-100 p-4 rounded-2xl mb-4 text-center text-xl tracking-widest" placeholder="Senha">
+                <button onclick="checkAdminPass()" class="block mx-auto bg-indigo-600 text-white px-10 py-4 rounded-2xl font-bold">Entrar</button>
+            </div>
+
+            <div id="adminContent" class="hidden flex flex-col h-full overflow-hidden bg-white">
+                <div class="p-6 bg-indigo-50 flex justify-between items-center">
+                    <button onclick="drawWinner()" id="drawBtn" class="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-black shadow-xl">SORTEAR VENCEDOR 🎲</button>
+                </div>
+                <div id="winnerDisplay" class="hidden m-6 p-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl text-center text-white shadow-xl animate-bounce">
+                    <p id="winnerName" class="text-4xl font-black mb-1"></p>
+                    <p id="winnerPhone" class="text-yellow-100 font-bold text-xl"></p>
+                </div>
+                <div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 text-slate-400 font-bold uppercase text-[9px]">
+                            <tr><th class="p-4">Nome</th><th class="p-4">WhatsApp</th></tr>
+                        </thead>
+                        <tbody id="adminTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL DO SCRIPT GOOGLE
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQvZjZjq-wmSorLpz9yq_-hY9CtdTVxAYfmeImvatxTXob61Ip941oBPO1ZD1Imk6I/exec"; 
+        const DRAW_DATE = new Date("2026-02-15T20:00:00").getTime();
+        const ADMIN_PASSWORD = "admin"; 
+
+        let participants = [];
+
+        window.onload = () => {
+            fetchParticipants();
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        };
+
+        function fetchParticipants() {
+            if (!SCRIPT_URL) return;
+            const oldScript = document.getElementById('jsonp-script');
+            if (oldScript) oldScript.remove();
+
+            const script = document.createElement('script');
+            script.id = 'jsonp-script';
+            script.src = `${SCRIPT_URL}?callback=handleResponse&t=${new Date().getTime()}`;
+            document.head.appendChild(script);
+        }
+
+        window.handleResponse = (response) => {
+            participants = response.data || [];
+            document.getElementById('totalCount').innerText = participants.length;
+            renderAdminTable();
+        };
+
+        document.getElementById('drawForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('userName').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
+
+            if (participants.some(p => p.phone === phone)) {
+                return showMsg("Este telefone já está participando!", "error");
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "Salvando na planilha...";
+            btn.disabled = true;
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('name', name);
+                formData.append('phone', phone);
+
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                showMsg("Inscrição confirmada! 🍀", "success");
+                document.getElementById('drawForm').reset();
+                setTimeout(fetchParticipants, 3000);
+
+            } catch (err) {
+                showMsg("Erro de conexão com a planilha.", "error");
+            } finally {
+                btn.innerText = "CONFIRMAR MINHA VAGA";
+                btn.disabled = false;
+            }
+        };
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = DRAW_DATE - now;
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = "<span class='text-red-500 font-black text-2xl uppercase'>Inscrições Encerradas</span>";
+                return;
+            }
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById('days').innerText = String(d).padStart(2, '0');
+            document.getElementById('hours').innerText = String(h).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(m).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(s).padStart(2, '0');
+        }
+
+        function showMsg(t, type) {
+            const el = document.getElementById('statusMsg');
+            el.innerText = t;
+            el.className = `mt-6 p-4 rounded-2xl text-center font-bold ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 5000);
+        }
+
+        window.toggleAdminModal = () => {
+            const m = document.getElementById('adminModal');
+            m.classList.toggle('opacity-0');
+            m.classList.toggle('pointer-events-none');
+        };
+
+        window.checkAdminPass = () => {
+            if (document.getElementById('adminPass').value === ADMIN_PASSWORD) {
+                document.getElementById('adminAuth').classList.add('hidden');
+                document.getElementById('adminContent').classList.remove('hidden');
+                renderAdminTable();
+            } else { alert("Senha incorreta!"); }
+        };
+
+        function renderAdminTable() {
+            const b = document.getElementById('adminTableBody');
+            if (!participants.length) {
+                b.innerHTML = '<tr><td colspan="2" class="p-8 text-center text-slate-400 italic">Nenhum participante.</td></tr>';
+                return;
+            }
+            b.innerHTML = participants.map(p => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="p-4 font-bold text-slate-700 border-b border-slate-50">${p.name}</td>
+                    <td class="p-4 text-slate-500 font-mono text-xs border-b border-slate-50">${p.phone}</td>
+                </tr>
+            `).join('');
+        }
+
+        window.drawWinner = () => {
+            if (participants.length < 1) return alert("Sem participantes!");
+            const btn = document.getElementById('drawBtn');
+            const winnerDisplay = document.getElementById('winnerDisplay');
+            btn.disabled = true;
+            winnerDisplay.classList.remove('hidden');
+            
+            let count = 0;
+            const interval = setInterval(() => {
+                const tempWinner = participants[Math.floor(Math.random() * participants.length)];
+                document.getElementById('winnerName').innerText = tempWinner.name;
+                document.getElementById('winnerPhone').innerText = "****-" + String(tempWinner.phone).slice(-4);
+                count++;
+                if (count > 20) {
+                    clearInterval(interval);
+                    const winner = participants[Math.floor(Math.random() * participants.length)];
+                    document.getElementById('winnerName').innerText = winner.name;
+                    document.getElementById('winnerPhone').innerText = winner.phone;
+                    btn.disabled = false;
+                    btn.innerText = "SORTEAR NOVAMENTE";
+                    createConfetti();
+                }
+            }, 100);
+        };
+
+        function createConfetti() {
+            for(let i=0; i<50; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.backgroundColor = ['#6366f1', '#f59e0b', '#10b981', '#ef4444'][Math.floor(Math.random()*4)];
+                c.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 4000);
+            }
+        }
+    </script>
+</body>
+</html>
