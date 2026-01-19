@@ -309,6 +309,10 @@
                                 <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">WhatsApp / Telefone</label>
                                 <input type="tel" id="userPhone" name="phone" required class="w-full px-4 md:px-5 py-3 md:py-4 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all bg-slate-50/50 text-base" placeholder="(00) 00000-0000">
                             </div>
+                            <div class="mt-4">
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Quantidade de Cupons</label>
+                                <input type="number" id="userQty" name="qty" value="1" min="1" max="100" required class="w-full px-4 md:px-5 py-3 md:py-4 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all bg-slate-50/50 text-base font-bold">
+                            </div>
                         </div>
                         <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 md:py-5 rounded-2xl shadow-lg transition-all active:scale-[0.98] touch-friendly text-base">
                             <span>CONFIRMAR MINHA VAGA</span>
@@ -413,7 +417,7 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQvZjZjq-wmSorLpz9yq_-hY9CtdTVxAYfmeImvatxTXob61Ip941oBPO1ZD1Imk6I/exec"; 
         const ENTRY_PASS = "ibna26";
         const ADMIN_PASS = "admin";
-        const DRAW_DATE = new Date("2026-02-15T20:00:00").getTime();
+        const DRAW_DATE = new Date("2026-03-29T20:00:00").getTime();
         
         let participants = [];
         let isDrawing = false;
@@ -430,6 +434,52 @@
                 alert("Senha incorreta! Por favor, fale com os responsáveis da IBNA.");
             }
         }
+
+        // 2. FORMULÁRIO DE INSCRIÇÃO (Fica fora da função de cima)
+        document.getElementById('drawForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('userName').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
+            
+            const qtyInput = document.getElementById('userQty');
+            const qty = qtyInput ? parseInt(qtyInput.value) : 1;
+
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+
+            try {
+                for (let i = 1; i <= qty; i++) {
+                    btn.innerHTML = `<span>REGISTRANDO ${i} de ${qty}...</span>`;
+                    
+                    const formData = new URLSearchParams();
+                    formData.append('name', name);
+                    formData.append('phone', phone);
+
+                    await fetch(SCRIPT_URL, { 
+                        method: 'POST', 
+                        mode: 'no-cors', 
+                        body: formData.toString(),
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    });
+                }
+
+                showMsg(`${qty} cupom(ns) confirmado(s) para ${name}! 🍀`, "success");
+                document.getElementById('drawForm').reset();
+                if(qtyInput) qtyInput.value = "1";
+                
+                setTimeout(() => {
+                    fetchParticipants();
+                }, 2000);
+
+            } catch (err) {
+                console.error("Erro ao enviar:", err);
+                showMsg("Erro de conexão.", "error");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
 
         function fetchParticipants() {
             const oldScript = document.getElementById('jsonp-script');
@@ -462,6 +512,7 @@
             document.getElementById('hours').innerText = String(h).padStart(2, '0');
             document.getElementById('minutes').innerText = String(m).padStart(2, '0');
             document.getElementById('seconds').innerText = String(s).padStart(2, '0');
+            
         }
 
         function showMsg(t, type) {
