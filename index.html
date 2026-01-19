@@ -447,52 +447,6 @@
         };
 
         // FORMULÁRIO DE INSCRIÇÃO
-        document.getElementById('drawForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('userName').value.trim();
-            const phone = document.getElementById('userPhone').value.trim();
-
-            // VALIDAÇÃO DUPLA
-            const alreadyExists = participants.some(p => 
-                p.phone === phone || p.name.toLowerCase() === name.toLowerCase()
-            );
-
-            if (alreadyExists) {
-                return showMsg("Este nome ou telefone já está participando! Se você errou os dados, por favor solicite aos membros responsáveis pelo sorteio para alterar os dados.", "error");
-            }
-
-            const btn = document.getElementById('submitBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = "Registando...";
-            btn.disabled = true;
-
-            try {
-                const formData = new URLSearchParams();
-                formData.append('name', name);
-                formData.append('phone', phone);
-
-                await fetch(SCRIPT_URL, { 
-                    method: 'POST', 
-                    mode: 'no-cors', 
-                    body: formData.toString(),
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                });
-
-                showMsg("Inscrição confirmada! 🍀", "success");
-                document.getElementById('drawForm').reset();
-                
-                setTimeout(() => {
-                    fetchParticipants();
-                }, 3000);
-
-            } catch (err) {
-                console.error("Erro crítico ao enviar dados:", err);
-                showMsg("Erro de conexão.", "error");
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        };
 
         function updateCountdown() {
             const distance = DRAW_DATE - new Date().getTime();
@@ -707,3 +661,4 @@
     </script>
 </body>
 </html>
+
