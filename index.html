@@ -1,715 +1,122 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Grande Sorteio! 🎁 - IBNA</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            -webkit-tap-highlight-color: transparent;
-            -webkit-text-size-adjust: 100%;
-        }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        /* Animações de Confetes Aprimoradas */
-        @keyframes confetti {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-        .confetti {
-            position: fixed; width: 10px; height: 10px;
-            animation: confetti 3s ease-out forwards;
-            z-index: 999; pointer-events: none;
-        }
-
-        /* Animação de Explosão do Presente */
-        @keyframes gift-pop {
-            0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
-            50% { transform: scale(1.2) rotate(5deg); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-        .gift-explosion {
-            animation: gift-pop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        /* Efeito de Nomes Surgindo */
-        @keyframes name-popup {
-            0% { transform: scale(0) rotateX(90deg); opacity: 0; }
-            70% { transform: scale(1.1) rotateX(0deg); opacity: 1; }
-            100% { transform: scale(1) rotateX(0deg); opacity: 1; }
-        }
-
-        @keyframes name-float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(2deg); }
-        }
-
-        /* Animação de Rolagem Acelerada */
-        @keyframes scroll-accelerate {
-            0% { transform: translateY(0); animation-timing-function: linear; }
-            20% { transform: translateY(-200px); }
-            40% { transform: translateY(-500px); }
-            60% { transform: translateY(-800px); animation-timing-function: ease-in; }
-            80% { transform: translateY(-1000px); animation-timing-function: ease-in-out; }
-            95% { transform: translateY(-1200px); animation-timing-function: cubic-bezier(0.1, 0.8, 0.2, 1); }
-            100% { transform: translateY(-1500px); }
-        }
-
-        .name-scroller {
-            height: 60px;
-            overflow: hidden;
-            position: relative;
-            perspective: 1000px;
-        }
-
-        .name-item {
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            font-weight: 900;
-            color: #4f46e5;
-            transform-origin: center;
-        }
-
-        /* Efeito de Destaque do Vencedor */
-        @keyframes winner-glow {
-            0%, 100% { 
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5),
-                          0 0 40px rgba(255, 165, 0, 0.3),
-                          0 0 60px rgba(255, 69, 0, 0.2);
-                transform: scale(1);
-            }
-            50% { 
-                box-shadow: 0 0 30px rgba(255, 215, 0, 0.8),
-                          0 0 60px rgba(255, 165, 0, 0.5),
-                          0 0 90px rgba(255, 69, 0, 0.3);
-                transform: scale(1.05);
-            }
-        }
-
-        .winner-glow {
-            animation: winner-glow 2s ease-in-out infinite;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b, #dc2626);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Efeito de Estrelas */
-        @keyframes star-twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .star {
-            position: absolute;
-            background: gold;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            animation: star-twinkle 1.5s infinite;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-
-        /* Botão de Sorteio Animado */
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
-            50% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
-        }
-
-        .pulse-button {
-            animation: pulse-glow 2s infinite;
-        }
-
-        /* Efeito de Fumaça */
-        @keyframes smoke {
-            0% { transform: translateY(0) scale(0.5); opacity: 1; }
-            100% { transform: translateY(-100px) scale(2); opacity: 0; }
-        }
-
-        .smoke {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            animation: smoke 1.5s ease-out forwards;
-        }
-
-        /* Melhorias para Mobile */
-        @media (max-width: 640px) {
-            .name-scroller {
-                height: 50px;
-            }
-            
-            .name-item {
-                height: 50px;
-                font-size: 1rem;
-            }
-            
-            #winnerName {
-                font-size: 2rem !important;
-                line-height: 1.2;
-                word-break: break-word;
-            }
-            
-            #winnerPhone {
-                font-size: 1.25rem !important;
-            }
-        }
-
-        /* Prevenir zoom em inputs no iOS */
-        input, select, textarea {
-            font-size: 16px !important;
-        }
-        
-        /* Melhorias de toque */
-        .touch-friendly {
-            min-height: 44px;
-            min-width: 44px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ÆTHER | Catálogo Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 relative overflow-x-hidden">
+<body>
 
-    <!-- TELA DE ACESSO RESTRITO (SENHA) -->
-    <div id="lockScreen" class="fixed inset-0 z-[100] bg-indigo-600 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 md:p-8 text-center border-4 border-indigo-400 mx-4">
-            <div class="text-6xl mb-6">🎁</div>
-            <h1 class="text-2xl md:text-3xl font-black text-slate-800 mb-2">Grande Sorteio!</h1>
-            <p class="text-slate-600 text-sm md:text-base mb-6 leading-relaxed">
-                Participe e concorra ao prémio da <strong>Igreja Batista Nova Aliança</strong>. <br>
-                <span class="text-red-500 font-bold text-xs block mt-2 italic">⚠️ Área Restrita: Pegue a senha com os membros responsáveis da igreja batista. Seja honesto e não se inscreva mais de uma vez, Deus está vendo rsrs</span>
-            </p>
-            <input type="password" id="entryPass" class="w-full border-2 border-slate-100 p-4 rounded-2xl mb-4 text-center text-lg md:text-xl tracking-widest focus:border-indigo-500 outline-none transition-all" placeholder="Senha de Acesso">
-            <button onclick="unlockApp()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-indigo-700 active:scale-95 transition-all touch-friendly">
-                ENTRAR NO SORTEIO
+    <!-- HEADER - sem carrinho -->
+    <header class="header" id="header">
+        <div class="container header-container">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+                <i class="fas fa-bars"></i>
             </button>
+            <div class="logo">
+                <a href="#">ÆTHER</a>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <ul class="nav-list">
+                    <li><a href="#home" class="nav-link">Início</a></li>
+                    <li><a href="#produtos" class="nav-link">Coleção</a></li>
+                    <li><a href="#novidades" class="nav-link">Novidades</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <!-- Substituído carrinho por botão WhatsApp -->
+                <a href="https://wa.me/5581999227456?text=Olá! Gostaria de ver o catálogo de vocês" 
+                   class="whatsapp-header-btn" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Atendimento
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO - texto atualizado para catálogo -->
+    <section class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <span class="hero-badge">Nova coleção</span>
+            <h1 class="hero-title">Peças exclusivas para <span class="accent-text">realçar seu estilo</span></h1>
+            <p class="hero-subtitle">Atendimento personalizado • Novidades toda semana • Consulte no WhatsApp</p>
+            <a href="#produtos" class="btn btn-primary btn-large">Ver coleção <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- PRODUTOS com filtros simplificados -->
+    <section class="products-section" id="produtos">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Peças Exclusivas</h2>
+                <p class="section-subtitle">Toque na imagem e consulte disponibilidade</p>
+            </div>
+
+            <!-- Barra de busca e filtro por categoria (apenas) -->
+            <div class="filter-bar">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar por produto..." class="search-input">
+                </div>
+                <select id="categoryFilter" class="filter-select">
+                    <option value="all">Todas categorias</option>
+                    <option value="camisetas">Camisetas</option>
+                    <option value="moletom">Moletom</option>
+                    <option value="calcas">Calças</option>
+                    <option value="jaquetas">Jaquetas</option>
+                </select>
+                <!-- Botão limpar filtros removido -->
+            </div>
+
+            <!-- Grid de produtos com skeleton -->
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </section>
+
+    <!-- MODAL DO PRODUTO (refatorado para WhatsApp) -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
 
-    <!-- CONTEÚDO PRINCIPAL (OCULTO ATÉ DESBLOQUEAR) -->
-    <div id="mainContent" class="hidden">
-        <nav class="absolute top-4 right-4 z-10">
-            <button onclick="toggleAdminModal()" class="text-xs font-semibold text-slate-400 hover:text-indigo-600 bg-white/80 border border-slate-200 px-4 py-2 rounded-full shadow-sm transition-all touch-friendly">
-                Painel Admin
-            </button>
-        </nav>
-
-        <header class="bg-indigo-600 text-white py-12 md:py-16 px-4 text-center shadow-lg relative overflow-hidden">
-            <div class="absolute inset-0 opacity-10 pointer-events-none">
-                <svg width="100%" height="100%"><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/></pattern><rect width="100%" height="100%" fill="url(#grid)" /></svg>
+    <!-- FOOTER SIMPLIFICADO -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-col">
+                <h4>ÆTHER</h4>
+                <p>Moda premium com atendimento personalizado via WhatsApp.</p>
             </div>
-            <h1 class="text-3xl md:text-6xl font-extrabold mb-4 relative z-10">Grande Sorteio IBNA! 🎁</h1>
-            <p class="text-indigo-100 text-base md:text-lg max-w-2xl mx-auto relative z-10">Prêmio: Bebedouro Gelágua EGM30</p>
-        </header>
-
-        <main class="max-w-5xl mx-auto px-4 md:px-6 -mt-8 md:-mt-12 pb-20 relative z-10">
-            <!-- SEÇÃO DO PRÊMIO -->
-            <section class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl mb-10 border-b-4 border-indigo-500">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
-                    <!-- Imagem do Prêmio -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-inner border border-slate-100 aspect-square flex items-center justify-center relative">
-                        <span class="absolute top-4 left-4 bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md z-20">SEMINOVO</span>
-                        <img src="image/gelagua.jpg" alt="Bebedouro Gelágua EGM30" class="w-full h-full object-contain p-4" onerror="this.parentElement.innerHTML='<p class=\'text-slate-300 font-bold\'>[Foto do Bebedouro aqui]</p>'">
-                    </div>
-
-                    <!-- Detalhes do Prêmio -->
-                    <div class="text-left">
-                        <!-- Badge -->
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-indigo-100 text-indigo-700 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                                Prêmio Especial
-                            </span>
-                        </div>
-
-                        <!-- Título -->
-                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 mb-4">
-                            Bebedouro Gelágua EGM30
-                        </h2>
-
-                        <!-- Lista de características -->
-                        <ul class="space-y-3 mb-6 md:mb-8">
-                            <li class="flex items-start gap-3">
-                                <span class="text-indigo-500 text-sm mt-1">✦</span>
-                                <p class="text-slate-600 text-sm md:text-base">
-                                    Sistema <strong>Easy Open</strong> & Função <strong>Mix</strong>.
-                                </p>
-                            </li>
-
-                            <li class="flex items-start gap-3">
-                                <span class="text-indigo-500 text-sm mt-1">✦</span>
-                                <p class="text-slate-600 text-sm md:text-base">
-                                    Consumo aproximado de energia: <strong>13 kWh/mês</strong>.
-                                </p>
-                            </li>
-
-                            <li class="flex items-start gap-3">
-                                <span class="text-indigo-500 text-sm mt-1">✦</span>
-                                <p class="text-slate-600 text-sm md:text-base">
-                                    Dimensões: <br>
-                                    <span class="text-slate-500 text-xs md:text-sm">
-                                        Largura 28,3 cm • Altura 42,2 cm • Profundidade 41,2 cm
-                                    </span>
-                                </p>
-                            </li>
-                        </ul>
-
-                        <!-- Contador Regressivo -->
-                        <div id="countdown" class="flex justify-between md:justify-start md:space-x-6">
-                            <div class="text-center">
-                                <span id="days" class="text-xl md:text-2xl font-black text-indigo-600 block">00</span>
-                                <span class="text-[9px] font-bold text-slate-400 uppercase">Dias</span>
-                            </div>
-                            <div class="text-center">
-                                <span id="hours" class="text-xl md:text-2xl font-black text-indigo-600 block">00</span>
-                                <span class="text-[9px] font-bold text-slate-400 uppercase">Horas</span>
-                            </div>
-                            <div class="text-center">
-                                <span id="minutes" class="text-xl md:text-2xl font-black text-indigo-600 block">00</span>
-                                <span class="text-[9px] font-bold text-slate-400 uppercase">Mins</span>
-                            </div>
-                            <div class="text-center">
-                                <span id="seconds" class="text-xl md:text-2xl font-black text-indigo-600 block">00</span>
-                                <span class="text-[9px] font-bold text-slate-400 uppercase">Segs</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="footer-col">
+                <h4>Atendimento</h4>
+                <ul>
+                    <li><a href="https://wa.me/5581999227456" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                    <li><a href="mailto:contato@aether.com">E-mail</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Redes</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
                 </div>
-            </section>
-
-            <!-- FORMULÁRIO E CONTADOR -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                <!-- Formulário de Inscrição -->
-                <section class="lg:col-span-2 glass-card rounded-3xl p-6 md:p-8 shadow-xl">
-                    <div class="flex items-center mb-6 md:mb-8">
-                        <div class="w-10 h-10 md:w-12 md:h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-xl md:text-2xl mr-3 md:mr-4">📝</div>
-                        <div>
-                            <h3 class="text-xl md:text-2xl font-bold text-slate-800">Participe Agora</h3>
-                            <p class="text-slate-400 text-xs md:text-sm">Inscreva-se uma única vez</p>
-                        </div>
-                    </div>
-
-                    <form id="drawForm" class="space-y-4 md:space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Nome Completo</label>
-                                <input type="text" id="userName" name="name" required class="w-full px-4 md:px-5 py-3 md:py-4 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all bg-slate-50/50 text-base" placeholder="Seu nome">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">WhatsApp / Telefone</label>
-                                <input type="tel" id="userPhone" name="phone" required class="w-full px-4 md:px-5 py-3 md:py-4 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all bg-slate-50/50 text-base" placeholder="(00) 00000-0000">
-                            </div>
-                            <div class="mt-4">
-                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Quantidade de Cupons</label>
-                                <input type="number" id="userQty" name="qty" value="1" min="1" max="100" required class="w-full px-4 md:px-5 py-3 md:py-4 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all bg-slate-50/50 text-base font-bold">
-                            </div>
-                        </div>
-                        <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 md:py-5 rounded-2xl shadow-lg transition-all active:scale-[0.98] touch-friendly text-base">
-                            <span>CONFIRMAR MINHA VAGA</span>
-                        </button>
-                    </form>
-                    <div id="statusMsg" class="mt-6 hidden p-4 rounded-2xl text-center font-bold text-sm md:text-base"></div>
-                </section>
-
-                <!-- Contador de Inscritos -->
-                <section class="glass-card rounded-3xl p-6 md:p-8 shadow-xl flex flex-col items-center justify-center text-center border-2 border-indigo-50">
-                    <div class="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full flex items-center justify-center text-3xl md:text-4xl mb-4 text-indigo-600 shadow-inner">👥</div>
-                    <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-2">Inscritos</h4>
-                    <div class="text-4xl md:text-6xl font-black text-slate-800 mb-2" id="totalCount">0</div>
-                    <button onclick="fetchParticipants()" class="mt-4 text-[10px] font-bold text-indigo-500 uppercase hover:underline touch-friendly">
-                        Atualizar 🔄
-                    </button>
-                </section>
-            </div>
-        </main>
-    </div>
-
-    <!-- MODAL ADMIN -->
-    <div id="adminModal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="toggleAdminModal()"></div>
-        <div class="relative bg-white w-full max-w-3xl m-4 rounded-2xl md:rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-4 md:p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h2 class="text-lg md:text-xl font-black text-slate-800 uppercase tracking-tight">Painel Admin</h2>
-                <button onclick="toggleAdminModal()" class="text-slate-400 text-2xl touch-friendly">&times;</button>
-            </div>
-
-            <div id="adminAuth" class="p-8 md:p-12 text-center">
-                <input type="password" id="adminPass" class="w-full max-w-xs border-2 border-slate-100 p-4 rounded-2xl mb-4 text-center text-lg md:text-xl tracking-widest" placeholder="Senha Admin">
-                <button onclick="checkAdminPass()" class="block mx-auto bg-indigo-600 text-white px-8 md:px-10 py-3 md:py-4 rounded-2xl font-bold touch-friendly">Entrar</button>
-            </div>
-
-            <div id="adminContent" class="hidden flex flex-col h-full overflow-hidden bg-white">
-                <div class="p-4 md:p-6 bg-indigo-50 flex flex-col items-center">
-                    <!-- ÁREA DA ANIMAÇÃO DO SORTEIO -->
-                    <div id="raffleBox" class="w-full bg-white rounded-2xl md:rounded-3xl border-4 border-indigo-200 p-4 md:p-8 mb-4 md:mb-6 hidden overflow-hidden shadow-xl md:shadow-2xl relative">
-                        <div class="text-center mb-3 md:mb-4">
-                            <div class="text-3xl md:text-4xl mb-2">🎲</div>
-                            <h3 class="text-base md:text-lg font-black text-slate-700">SORTEIO EM ANDAMENTO</h3>
-                        </div>
-                        
-                        <!-- Área de nomes flutuantes -->
-                        <div id="floatingNames" class="absolute inset-0 pointer-events-none z-10"></div>
-                        
-                        <!-- Rolagem principal -->
-                        <div class="name-scroller border-2 border-indigo-100 rounded-xl bg-gradient-to-b from-indigo-50 to-white" id="scroller">
-                            <!-- Nomes vão passar aqui -->
-                        </div>
-                        
-                        <!-- Indicador de posição -->
-                        <div class="absolute left-0 right-0 top-1/2 transform -translate-y-1/2 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent z-20"></div>
-                        <div class="absolute left-0 right-0 top-1/2 transform -translate-y-1/2 flex justify-center z-30">
-                            <div class="w-3 h-6 md:w-4 md:h-8 bg-indigo-600 rounded-full shadow-lg"></div>
-                        </div>
-                        
-                        <p class="text-center text-xs text-slate-400 mt-3 md:mt-4">Os nomes estão girando... preparando a surpresa!</p>
-                    </div>
-
-                    <!-- TELA DO VENCEDOR (EXPLOSÃO ESPETACULAR) -->
-                    <div id="winnerDisplay" class="hidden w-full m-2 md:m-4 p-4 md:p-8 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-2xl md:rounded-3xl text-center text-white shadow-xl md:shadow-2xl relative overflow-hidden border-4 border-yellow-300">
-                        <!-- Efeito de fumaça -->
-                        <div id="smokeEffect" class="absolute inset-0 pointer-events-none"></div>
-                        
-                        <!-- Estrelas brilhantes -->
-                        <div id="starField" class="absolute inset-0 pointer-events-none"></div>
-                        
-                        <div class="relative z-10">
-                            <div class="text-4xl md:text-6xl mb-3 md:mb-4 animate-bounce">🏆✨</div>
-                            <p class="text-sm md:text-lg font-bold uppercase tracking-widest mb-2 bg-white/20 py-2 px-3 md:px-4 rounded-full inline-block">PARABÉNS AO GANHADOR!</p>
-                            <p id="winnerName" class="text-2xl md:text-5xl lg:text-6xl font-black mb-1 drop-shadow-2xl winner-glow py-2 px-4 md:px-6 bg-white/10 rounded-2xl"></p>
-                            <p id="winnerPhone" class="text-yellow-100 font-bold text-lg md:text-2xl mt-2 bg-black/20 py-1 md:py-2 px-3 md:px-4 rounded-full inline-block"></p>
-                            <div class="mt-4 md:mt-6 text-yellow-100 text-xs md:text-sm">
-                                <p>🎉 <strong>Parabéns!</strong> Entre em contato para combinar a entrega 🎉</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="drawWinner()" id="drawBtn" class="mt-4 md:mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-2xl font-black shadow-xl md:shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 pulse-button touch-friendly text-sm md:text-base w-full max-w-md">
-                        INICIAR SORTEIO ESPETACULAR 🚀
-                    </button>
-                </div>
-
-                <div class="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
-                    <table class="w-full text-left text-xs md:text-sm">
-                        <thead class="bg-slate-50 text-slate-400 font-bold uppercase text-[8px] md:text-[9px]">
-                            <tr>
-                                <th class="p-2 md:p-4">Nome</th>
-                                <th class="p-2 md:p-4">WhatsApp</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminTableBody" class="divide-y divide-slate-100"></tbody>
-                    </table>
-                </div>
+                <p>Entregamos para todo Brasil</p>
             </div>
         </div>
-    </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ÆETHER - Catálogo digital</p>
+        </div>
+    </footer>
 
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQvZjZjq-wmSorLpz9yq_-hY9CtdTVxAYfmeImvatxTXob61Ip941oBPO1ZD1Imk6I/exec"; 
-        const ENTRY_PASS = "ibna26";
-        const ADMIN_PASS = "admin";
-        const DRAW_DATE = new Date("2026-03-29T20:00:00").getTime();
-        
-        let participants = [];
-        let isDrawing = false;
-
-        // FUNÇÃO DE DESBLOQUEIO INICIAL
-        function unlockApp() {
-            const pass = document.getElementById('entryPass').value;
-            if (pass === ENTRY_PASS) {
-                document.getElementById('lockScreen').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                fetchParticipants();
-                setInterval(updateCountdown, 1000);
-            } else {
-                alert("Senha incorreta! Por favor, fale com os responsáveis da IBNA.");
-            }
-        }
-
-        // 2. FORMULÁRIO DE INSCRIÇÃO (Fica fora da função de cima)
-        document.getElementById('drawForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('userName').value.trim();
-            const phone = document.getElementById('userPhone').value.trim();
-            
-            const qtyInput = document.getElementById('userQty');
-            const qty = qtyInput ? parseInt(qtyInput.value) : 1;
-
-            const btn = document.getElementById('submitBtn');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-
-            try {
-                for (let i = 1; i <= qty; i++) {
-                    btn.innerHTML = `<span>REGISTRANDO ${i} de ${qty}...</span>`;
-                    
-                    const formData = new URLSearchParams();
-                    formData.append('name', name);
-                    formData.append('phone', phone);
-
-                    await fetch(SCRIPT_URL, { 
-                        method: 'POST', 
-                        mode: 'no-cors', 
-                        body: formData.toString(),
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                    });
-                }
-
-                showMsg(`${qty} cupom(ns) confirmado(s) para ${name}! 🍀`, "success");
-                document.getElementById('drawForm').reset();
-                if(qtyInput) qtyInput.value = "1";
-                
-                setTimeout(() => {
-                    fetchParticipants();
-                }, 2000);
-
-            } catch (err) {
-                console.error("Erro ao enviar:", err);
-                showMsg("Erro de conexão.", "error");
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        };
-
-        function fetchParticipants() {
-            const oldScript = document.getElementById('jsonp-script');
-            if (oldScript) oldScript.remove();
-            const script = document.createElement('script');
-            script.id = 'jsonp-script';
-            script.src = `${SCRIPT_URL}?callback=handleResponse&t=${new Date().getTime()}`;
-            document.head.appendChild(script);
-        }
-
-        window.handleResponse = (response) => {
-            participants = response.data || [];
-            document.getElementById('totalCount').innerText = participants.length;
-            renderAdminTable();
-        };
-
-        // FORMULÁRIO DE INSCRIÇÃO
-
-        function updateCountdown() {
-            const distance = DRAW_DATE - new Date().getTime();
-            if (distance < 0) {
-                document.getElementById('countdown').innerHTML = "<span class='text-red-500 font-black'>Encerrado</span>";
-                return;
-            }
-            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementById('days').innerText = String(d).padStart(2, '0');
-            document.getElementById('hours').innerText = String(h).padStart(2, '0');
-            document.getElementById('minutes').innerText = String(m).padStart(2, '0');
-            document.getElementById('seconds').innerText = String(s).padStart(2, '0');
-            
-        }
-
-        function showMsg(t, type) {
-            const el = document.getElementById('statusMsg');
-            el.innerText = t;
-            el.className = `mt-6 p-4 rounded-2xl text-center font-bold shadow-md ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
-            el.classList.remove('hidden');
-            const timeout = type === 'error' ? 10000 : 5000;
-            setTimeout(() => el.classList.add('hidden'), timeout);
-        }
-
-        window.toggleAdminModal = () => {
-            const m = document.getElementById('adminModal');
-            m.classList.toggle('opacity-0');
-            m.classList.toggle('pointer-events-none');
-        };
-
-        window.checkAdminPass = () => {
-            if (document.getElementById('adminPass').value === ADMIN_PASS) {
-                document.getElementById('adminAuth').classList.add('hidden');
-                document.getElementById('adminContent').classList.remove('hidden');
-            } else { alert("Senha Admin incorreta!"); }
-        };
-
-        function renderAdminTable() {
-            const b = document.getElementById('adminTableBody');
-            b.innerHTML = participants.map(p => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-2 md:p-4 font-bold text-slate-700 border-b border-slate-50 text-xs md:text-sm">${p.name}</td>
-                    <td class="p-2 md:p-4 text-slate-500 font-mono text-xs border-b border-slate-50">${p.phone}</td>
-                </tr>
-            `).join('');
-        }
-
-        // ANIMAÇÃO DE NOMES FLUTUANTES
-        function createFloatingNames(count = 15) {
-            const container = document.getElementById('floatingNames');
-            container.innerHTML = '';
-            
-            for(let i = 0; i < count; i++) {
-                const nameDiv = document.createElement('div');
-                nameDiv.className = 'name-item absolute';
-                nameDiv.style.left = `${Math.random() * 100}%`;
-                nameDiv.style.top = `${Math.random() * 100}%`;
-                nameDiv.style.fontSize = `${Math.random() * 0.6 + 0.6}rem`;
-                nameDiv.style.opacity = Math.random() * 0.5 + 0.3;
-                nameDiv.style.animation = `name-float ${Math.random() * 3 + 2}s infinite`;
-                nameDiv.style.animationDelay = `${Math.random() * 2}s`;
-                nameDiv.innerText = participants[Math.floor(Math.random() * participants.length)].name;
-                container.appendChild(nameDiv);
-            }
-        }
-
-        // ANIMAÇÃO DE ESTRELAS
-        function createStars(count = 10) {
-            const container = document.getElementById('starField');
-            container.innerHTML = '';
-            
-            for(let i = 0; i < count; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = `${Math.random() * 15 + 8}px`;
-                star.style.height = star.style.width;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 2}s`;
-                star.style.opacity = Math.random() * 0.7 + 0.3;
-                container.appendChild(star);
-            }
-        }
-
-        // EFEITO DE FUMAÇA
-        function createSmoke() {
-            const container = document.getElementById('smokeEffect');
-            container.innerHTML = '';
-            
-            for(let i = 0; i < 6; i++) {
-                const smoke = document.createElement('div');
-                smoke.className = 'smoke';
-                smoke.style.width = `${Math.random() * 40 + 30}px`;
-                smoke.style.height = smoke.style.width;
-                smoke.style.left = `${Math.random() * 100}%`;
-                smoke.style.top = '100%';
-                smoke.style.animationDelay = `${Math.random() * 0.5}s`;
-                container.appendChild(smoke);
-            }
-        }
-
-        // SORTEIO ESPETACULAR - OTIMIZADO PARA MOBILE
-        window.drawWinner = () => {
-            if (isDrawing) return;
-            if (participants.length < 1) return alert("Nenhum participante!");
-            
-            isDrawing = true;
-            const btn = document.getElementById('drawBtn');
-            const raffleBox = document.getElementById('raffleBox');
-            const scroller = document.getElementById('scroller');
-            const winnerDisplay = document.getElementById('winnerDisplay');
-
-            const originalBtnText = btn.innerHTML;
-            btn.innerHTML = "SORTEANDO... ⏳";
-            btn.disabled = true;
-            winnerDisplay.classList.add('hidden');
-            raffleBox.classList.remove('hidden');
-            
-            // Criar nomes flutuantes
-            createFloatingNames(15);
-            
-            // FASE 1: Nomes surgindo em cascata
-            let scrollerContent = "";
-            const nameCount = Math.min(30, participants.length * 2);
-            for(let i = 0; i < nameCount; i++) {
-                const randomIndex = Math.floor(Math.random() * participants.length);
-                const name = participants[randomIndex].name;
-                scrollerContent += `<div class="name-item" style="animation: name-popup ${0.5 + i*0.02}s ease-out forwards; animation-delay: ${i*0.05}s;">${name}</div>`;
-            }
-            scroller.innerHTML = scrollerContent;
-            
-            setTimeout(() => {
-                // FASE 2: Rolagem acelerada
-                scroller.style.animation = 'scroll-accelerate 3s forwards';
-                scroller.style.animationTimingFunction = 'cubic-bezier(0.1, 0.8, 0.2, 1)';
-                
-                // Efeito visual
-                raffleBox.style.animation = 'spin-in 0.5s ease-out';
-                
-                setTimeout(() => {
-                    // FASE 3: Revelação do vencedor
-                    scroller.style.animation = '';
-                    const winner = participants[Math.floor(Math.random() * participants.length)];
-                    
-                    // Efeito de transição
-                    raffleBox.style.opacity = '0';
-                    raffleBox.style.transform = 'scale(0.8)';
-                    
-                    setTimeout(() => {
-                        raffleBox.classList.add('hidden');
-                        raffleBox.style.opacity = '1';
-                        raffleBox.style.transform = 'scale(1)';
-                        
-                        // Criar efeitos especiais (reduzidos para mobile)
-                        createStars();
-                        createSmoke();
-                        createSuperConfetti();
-                        
-                        // Mostrar vencedor
-                        winnerDisplay.classList.remove('hidden');
-                        document.getElementById('winnerName').innerText = winner.name;
-                        document.getElementById('winnerPhone').innerText = winner.phone;
-                        
-                        // Resetar botão
-                        btn.disabled = false;
-                        btn.innerHTML = "SORTEAR NOVAMENTE 🔄";
-                        isDrawing = false;
-                    }, 300);
-                }, 3000);
-            }, 2000);
-        };
-
-        // CONFETI SUPER MELHORADO (OTIMIZADO)
-        function createSuperConfetti() {
-            const colors = ['#6366f1', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6'];
-            const confettiCount = window.innerWidth < 640 ? 80 : 120;
-            
-            for(let i = 0; i < confettiCount; i++) {
-                const c = document.createElement('div');
-                c.className = 'confetti';
-                c.style.left = Math.random() * 100 + 'vw';
-                c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                c.style.animationDelay = Math.random() * 2 + 's';
-                c.style.width = Math.random() * 10 + 5 + 'px';
-                c.style.height = Math.random() * 10 + 5 + 'px';
-                c.style.borderRadius = '50%';
-                c.style.transform += ` rotate(${Math.random() * 360}deg)`;
-                
-                document.body.appendChild(c);
-                setTimeout(() => c.remove(), 4000);
-            }
-        }
-
-        // Prevenir rolagem enquanto o modal está aberto
-        let originalOverflow = '';
-        window.toggleAdminModal = () => {
-            const m = document.getElementById('adminModal');
-            const isOpening = m.classList.contains('opacity-0');
-            
-            if (isOpening) {
-                originalOverflow = document.body.style.overflow;
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = originalOverflow;
-            }
-            
-            m.classList.toggle('opacity-0');
-            m.classList.toggle('pointer-events-none');
-        };
-    </script>
+    <!-- SCRIPTS (cart.js removido) -->
+    <script src="js/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
-
